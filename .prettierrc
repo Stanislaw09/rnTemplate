@@ -1,0 +1,11 @@
+{
+   "tabWidth": 3,
+   "printWidth": 90,
+   "parser": "babel-ts",
+   "trailingComma": "all",
+   "arrowParens": "avoid",
+   "endOfLine": "auto",
+   "semi": true,
+   "singleQuote": true,
+   "bracketSameLine": false
+}
