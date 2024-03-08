@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from './store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface InitialState {
    token: string | null;
@@ -14,12 +15,18 @@ const initialState: InitialState = {
 // Create the async thunk
 export const loginUser = createAsyncThunk(
    'auth/loginUser',
-   async (userId: number, thunkAPI) => {
+   async (userId: string, thunkAPI) => {
       const response: { data: string } = await new Promise(resolve => {
          setTimeout(() => {
-            resolve({ data: 'auth-token-2137' });
+            resolve({ data: userId });
          }, 1000);
       });
+
+      try {
+         await AsyncStorage.setItem('auth-token', response.data);
+      } catch (e) {
+         throw new Error('Error saving token to storage');
+      }
 
       return response.data;
    },
@@ -31,6 +38,12 @@ export const logoutUser = createAsyncThunk('auth/logoutUser', async thunkAPI => 
          resolve('ok');
       }, 1000);
    });
+
+   try {
+      await AsyncStorage.removeItem('auth-token');
+   } catch (e) {
+      throw new Error('Error removing token');
+   }
 
    return response;
 });
