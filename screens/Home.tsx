@@ -1,55 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import { View, Button, Text, TextInput, ToastAndroid } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getAuthStatus, getAuthToken, logoutUser } from '../store/authSlice';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setText } from '../store/dataSlice';
 
 function HomeScreen({ navigation }: DrawerScreenProps<any>) {
    const dispatch = useAppDispatch();
    const authStatus = useAppSelector(getAuthStatus);
    const authToken = useAppSelector(getAuthToken);
-   const [text, setText] = useState('');
-
-   const readTextFromStorage = async () => {
-      try {
-         const jsonValue = await AsyncStorage.getItem('text');
-
-         if (jsonValue !== null) {
-            const parsed = JSON.parse(jsonValue);
-
-            setText(parsed[authToken ?? '']);
-
-         }
-      } catch (e) {
-         throw new Error('Error reading text from storage');
-      }
-   };
-
-   useEffect(() => {
-      readTextFromStorage();
-   }, []);
+   const textValue = useAppSelector((state) => state.root.dataSlice.text);
+   const [inputValue, setInputValue] = useState(textValue ?? '');
 
    const handleLogout = () => {
       dispatch(logoutUser());
    };
 
    const handleSaveText = async () => {
-      if (authToken) {
-         try {
-            const currentValue = await AsyncStorage.getItem('text');
-            let parsedValue = JSON.parse(currentValue || '{}');
-            parsedValue[authToken] = text;
+      dispatch(setText(inputValue));
 
-            const jsonValue = JSON.stringify(parsedValue);
-
-            await AsyncStorage.setItem('text', jsonValue);
-
-            ToastAndroid.showWithGravity('Saved!', ToastAndroid.SHORT, ToastAndroid.CENTER);
-         } catch (e) {
-            throw new Error('Error saving text to storage');
-         }
-      }
+      ToastAndroid.showWithGravity(
+         'saved',
+         ToastAndroid.SHORT,
+         ToastAndroid.CENTER,
+      );
    };
 
    return (
@@ -63,14 +37,14 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
 
          <View style={{ rowGap: 16 }}>
             <TextInput
+               value={inputValue}
+               onChangeText={setInputValue}
                style={{
                   height: 40,
                   width: 220,
                   borderWidth: 1,
                   padding: 10,
                }}
-               onChangeText={setText}
-               value={text}
             />
             <Button onPress={handleSaveText} title="Save to store" />
          </View>

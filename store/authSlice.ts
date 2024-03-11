@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from './store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface InitialState {
    token: string | null;
@@ -22,12 +21,6 @@ export const loginUser = createAsyncThunk(
          }, 1000);
       });
 
-      try {
-         await AsyncStorage.setItem('auth-token', response.data);
-      } catch (e) {
-         throw new Error('Error saving token to storage');
-      }
-
       return response.data;
    },
 );
@@ -38,12 +31,6 @@ export const logoutUser = createAsyncThunk('auth/logoutUser', async thunkAPI => 
          resolve('ok');
       }, 1000);
    });
-
-   try {
-      await AsyncStorage.removeItem('auth-token');
-   } catch (e) {
-      throw new Error('Error removing token');
-   }
 
    return response;
 });
@@ -73,7 +60,7 @@ export const authSlice = createSlice({
    },
 });
 
-export const getAuthToken = (state: RootState) => state.auth.token;
-export const getAuthStatus = (state: RootState) => state.auth.status;
+export const getAuthToken = (state: RootState) => state.root.authSlice.token;
+export const getAuthStatus = (state: RootState) => state.root.authSlice.status;
 
 export default authSlice.reducer;
