@@ -3,27 +3,40 @@ import { DrawerScreenProps } from '@react-navigation/drawer';
 import { View, Button, Text, TextInput, ToastAndroid } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getAuthStatus, getAuthToken, logoutUser } from '../store/authSlice';
-import { setText } from '../store/dataSlice';
+import { setUser } from '../store/dataSlice';
+import { UserState } from '../types/user';
 
 function HomeScreen({ navigation }: DrawerScreenProps<any>) {
    const dispatch = useAppDispatch();
    const authStatus = useAppSelector(getAuthStatus);
    const authToken = useAppSelector(getAuthToken);
-   const textValue = useAppSelector((state) => state.root.dataSlice.text);
-   const [inputValue, setInputValue] = useState(textValue ?? '');
+   const userNode = useAppSelector(state => state.root.dataSlice.node);
+   const { value, user, date } = userNode;
+   const userToken = useAppSelector(state => state.root.authSlice.token);
+   const [currentUser, setCurrentUser] = useState<UserState>({
+      node: {
+         value,
+         user,
+         date,
+      },
+   });
 
    const handleLogout = () => {
       dispatch(logoutUser());
    };
 
    const handleSaveText = async () => {
-      dispatch(setText(inputValue));
-
-      ToastAndroid.showWithGravity(
-         'saved',
-         ToastAndroid.SHORT,
-         ToastAndroid.CENTER,
+      dispatch(
+         setUser({
+            node: {
+               value: currentUser.node.value,
+               user: currentUser.node.user,
+               date: currentUser.node.date,
+            },
+         }),
       );
+
+      ToastAndroid.showWithGravity('saved', ToastAndroid.SHORT, ToastAndroid.CENTER);
    };
 
    return (
@@ -37,8 +50,16 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
 
          <View style={{ rowGap: 16 }}>
             <TextInput
-               value={inputValue}
-               onChangeText={setInputValue}
+               value={currentUser.node.value}
+               onChangeText={value => {
+                  setCurrentUser({
+                     node: {
+                        value,
+                        user: userToken,
+                        date: new Date(),
+                     },
+                  });
+               }}
                style={{
                   height: 40,
                   width: 220,
