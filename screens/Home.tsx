@@ -3,23 +3,15 @@ import { DrawerScreenProps } from '@react-navigation/drawer';
 import { View, Button, Text, TextInput, ToastAndroid } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getAuthStatus, getAuthToken, logoutUser } from '../store/authSlice';
-import { setUser } from '../store/dataSlice';
-import { UserState } from '../types/user';
+import { setNote } from '../store/dataSlice';
 
 function HomeScreen({ navigation }: DrawerScreenProps<any>) {
    const dispatch = useAppDispatch();
    const authStatus = useAppSelector(getAuthStatus);
    const authToken = useAppSelector(getAuthToken);
-   const userNode = useAppSelector(state => state.root.dataSlice.node);
-   const { value, user, date } = userNode;
    const userToken = useAppSelector(state => state.root.authSlice.token);
-   const [currentUser, setCurrentUser] = useState<UserState>({
-      node: {
-         value,
-         user,
-         date,
-      },
-   });
+   const noteValue = useAppSelector(state => state.root.dataSlice.note.value);
+   const [textValue, setTextValue] = useState<string>(noteValue ?? '');
 
    const handleLogout = () => {
       dispatch(logoutUser());
@@ -27,11 +19,11 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
 
    const handleSaveText = async () => {
       dispatch(
-         setUser({
-            node: {
-               value: currentUser.node.value,
-               user: currentUser.node.user,
-               date: currentUser.node.date,
+         setNote({
+            note: {
+               value: textValue,
+               user: userToken,
+               date: new Date(),
             },
          }),
       );
@@ -50,16 +42,8 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
 
          <View style={{ rowGap: 16 }}>
             <TextInput
-               value={currentUser.node.value}
-               onChangeText={value => {
-                  setCurrentUser({
-                     node: {
-                        value,
-                        user: userToken,
-                        date: new Date(),
-                     },
-                  });
-               }}
+               value={textValue}
+               onChangeText={setTextValue}
                style={{
                   height: 40,
                   width: 220,

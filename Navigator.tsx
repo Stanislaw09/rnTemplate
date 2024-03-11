@@ -17,7 +17,7 @@ const Stack = createNativeStackNavigator();
 
 function NotificationsScreen({ navigation }: DrawerScreenProps<any>) {
    const authStatus = useAppSelector(getAuthStatus);
-   const textValue = useAppSelector(state => state.root.dataSlice.node.value);
+   const textValue = useAppSelector(state => state.root.dataSlice.note.value);
 
    return (
       <View
