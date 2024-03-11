@@ -14,12 +14,12 @@ function LoginScreen({ navigation }: NativeStackScreenProps<any>) {
 
    return (
       <View
-         style={{ flex: 1, alignItems: 'center', justifyContent: 'center', rowGap: 20 }}
+         style={{ flex: 1, alignItems: 'center', justifyContent: 'center', rowGap: 16 }}
       >
          <Text style={{ fontSize: 20 }}>Login Screen</Text>
          <Text style={{ fontSize: 16 }}>Current auth status: {authStatus}</Text>
 
-         <View style={{ marginVertical: 40, rowGap: 12 }}>
+         <View style={{ marginVertical: 40, rowGap: 16 }}>
             <Button onPress={() => logIn('takeda')} title="Log in as Takeda Shingen" />
             <Button onPress={() => logIn('uesugi')} title="Log in as Uesugi Kenshin" />
          </View>
