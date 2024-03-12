@@ -1,6 +1,6 @@
 # React Native Template App
 Simple React-Native app template which utilizes Stack & Drawer navigation. 
-Allows to save data to the redux store and keep them in async storage with React-Persist.
+Allows to save data to the redux store and keep them in async storage with Redux-Persist.
 
 ## Troubleshooting
 
