@@ -13,6 +13,8 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
    const noteValue = useAppSelector(state => state.root.dataSlice.note.value);
    const [textValue, setTextValue] = useState<string>(noteValue ?? '');
 
+
+
    const handleLogout = () => {
       dispatch(logoutUser());
    };
@@ -20,11 +22,9 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
    const handleSaveText = async () => {
       dispatch(
          setNote({
-            note: {
-               value: textValue,
-               user: userToken,
-               date: new Date(),
-            },
+            value: textValue,
+            user: userToken,
+            date: new Date(),
          }),
       );
 
