@@ -3,6 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { View, Text, Button } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getAuthStatus, loginUser } from '../store/authSlice';
+import Ghost from '../assets/ghost.svg';
 
 function LoginScreen({ navigation }: NativeStackScreenProps<any>) {
    const dispatch = useAppDispatch();
@@ -16,7 +17,17 @@ function LoginScreen({ navigation }: NativeStackScreenProps<any>) {
       <View
          style={{ flex: 1, alignItems: 'center', justifyContent: 'center', rowGap: 16 }}
       >
-         <Text style={{ fontSize: 20 }}>Login Screen</Text>
+         <View
+            style={{
+               flexDirection: 'row',
+               columnGap: 12,
+               alignItems: 'center',
+               marginBottom: 20
+            }}
+         >
+            <Text style={{ fontSize: 24 }}>Login Screen</Text>
+            <Ghost width={32} height={32} stroke="#934" />
+         </View>
          <Text style={{ fontSize: 16 }}>Current auth status: {authStatus.state}</Text>
 
          <View style={{ marginVertical: 40, rowGap: 16 }}>
