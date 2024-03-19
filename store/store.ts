@@ -17,11 +17,13 @@ const persistConfig = {
    key: 'root',
    storage,
    version: 1,
+   blacklist: ['data'],
+   whitelist: ['auth'],
 };
 
 const rootReducer = combineReducers({
-   authSlice,
-   dataSlice,
+   auth: authSlice,
+   data: dataSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

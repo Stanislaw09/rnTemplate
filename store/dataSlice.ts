@@ -90,7 +90,7 @@ export const dataSlice = createSlice({
 });
 
 export const { setNote } = dataSlice.actions;
-export const loadingSelector = (state: RootState) => state.root.dataSlice.loading;
-export const musicSelector = (state: RootState) => state.root.dataSlice.music;
+export const loadingSelector = (state: RootState) => state.root.data.loading;
+export const musicSelector = (state: RootState) => state.root.data.music;
 
 export default dataSlice.reducer;

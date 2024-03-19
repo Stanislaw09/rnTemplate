@@ -17,7 +17,7 @@ import {
    loadingSelector,
    musicSelector,
    addTrack,
-   removeTrack
+   removeTrack,
 } from '../store/dataSlice';
 
 function HomeScreen({ navigation }: DrawerScreenProps<any>) {
@@ -37,6 +37,13 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
 
    const handleSaveText = async () => {
       if (authToken) {
+         if (!textValue)
+            return ToastAndroid.showWithGravity(
+               'Please enter a note',
+               ToastAndroid.SHORT,
+               ToastAndroid.CENTER,
+            );
+
          const randomId = Math.floor(Math.random() * 10000);
 
          dispatch(

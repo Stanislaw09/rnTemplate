@@ -70,7 +70,7 @@ export const authSlice = createSlice({
    },
 });
 
-export const getAuthToken = (state: RootState) => state.root.authSlice.token;
-export const getAuthStatus = (state: RootState) => state.root.authSlice.status;
+export const getAuthToken = (state: RootState) => state.root.auth.token;
+export const getAuthStatus = (state: RootState) => state.root.auth.status;
 
 export default authSlice.reducer;
