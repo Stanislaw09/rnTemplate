@@ -17,7 +17,7 @@ function LoginScreen({ navigation }: NativeStackScreenProps<any>) {
          style={{ flex: 1, alignItems: 'center', justifyContent: 'center', rowGap: 16 }}
       >
          <Text style={{ fontSize: 20 }}>Login Screen</Text>
-         <Text style={{ fontSize: 16 }}>Current auth status: {authStatus}</Text>
+         <Text style={{ fontSize: 16 }}>Current auth status: {authStatus.state}</Text>
 
          <View style={{ marginVertical: 40, rowGap: 16 }}>
             <Button onPress={() => logIn('takeda')} title="Log in as Takeda Shingen" />

@@ -17,14 +17,12 @@ const Stack = createNativeStackNavigator();
 
 function NotificationsScreen({ navigation }: DrawerScreenProps<any>) {
    const authStatus = useAppSelector(getAuthStatus);
-   const textValue = useAppSelector(state => state.root.dataSlice.note.value);
 
    return (
       <View
          style={{ flex: 1, alignItems: 'center', justifyContent: 'center', rowGap: 28 }}
       >
-         <Text>Current auth status: {authStatus}</Text>
-         <Text>{textValue || 'nothing :/'}</Text>
+         <Text>Current auth status: {authStatus.state}</Text>
 
          <Button onPress={() => navigation.goBack()} title="Go back home" />
       </View>
@@ -38,7 +36,7 @@ function SignUpScreen({ navigation }: NativeStackScreenProps<any>) {
       <View
          style={{ flex: 1, alignItems: 'center', justifyContent: 'center', rowGap: 28 }}
       >
-         <Text>Current auth status: {authStatus}</Text>
+         <Text>Current auth status: {authStatus.state}</Text>
          <Button onPress={() => navigation.navigate('login')} title="Go to login" />
       </View>
    );

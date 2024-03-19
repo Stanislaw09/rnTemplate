@@ -1,14 +1,22 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from './store';
 
+interface Status {
+   state: 'pending' | 'logged-in' | 'logged-out';
+   user: string | null;
+}
+
 interface InitialState {
    token: string | null;
-   status: 'pending' | 'logged-in' | 'logged-out';
+   status: Status;
 }
 
 const initialState: InitialState = {
    token: null,
-   status: 'logged-out',
+   status: {
+      state: 'logged-out',
+      user: null,
+   },
 };
 
 // Create the async thunk
@@ -43,20 +51,22 @@ export const authSlice = createSlice({
    },
    // handle async thunk actions
    extraReducers: builder => {
-      builder.addCase(loginUser.pending, (state: InitialState) => {
-         state.status = 'pending';
-      });
-      builder.addCase(loginUser.fulfilled, (state: InitialState, action) => {
-         state.status = 'logged-in';
-         state.token = action.payload;
-      });
-      builder.addCase(logoutUser.pending, (state: InitialState) => {
-         state.status = 'pending';
-      });
-      builder.addCase(logoutUser.fulfilled, (state: InitialState, action) => {
-         state.status = 'logged-out';
-         state.token = null;
-      });
+      builder
+         .addCase(loginUser.pending, (state: InitialState) => {
+            state.status.state = 'pending';
+         })
+         .addCase(loginUser.fulfilled, (state: InitialState, action) => {
+            state.status.state = 'logged-in';
+            state.status.user = action.payload;
+            state.token = action.payload;
+         })
+         .addCase(logoutUser.pending, (state: InitialState) => {
+            state.status.state = 'pending';
+         })
+         .addCase(logoutUser.fulfilled, (state: InitialState, action) => {
+            state.status.state = 'logged-out';
+            state.token = null;
+         });
    },
 });
 

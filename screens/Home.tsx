@@ -1,34 +1,45 @@
 import { useState } from 'react';
 import { DrawerScreenProps } from '@react-navigation/drawer';
-import { View, Button, Text, TextInput, ToastAndroid } from 'react-native';
+import {
+   View,
+   Button,
+   Text,
+   TextInput,
+   ToastAndroid,
+   TouchableOpacity,
+   ActivityIndicator,
+} from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getAuthStatus, getAuthToken, logoutUser } from '../store/authSlice';
-import { setNote } from '../store/dataSlice';
+import { addNote, loadingSelector, removeNote } from '../store/dataSlice';
 
 function HomeScreen({ navigation }: DrawerScreenProps<any>) {
    const dispatch = useAppDispatch();
    const authStatus = useAppSelector(getAuthStatus);
    const authToken = useAppSelector(getAuthToken);
-   const userToken = useAppSelector(state => state.root.authSlice.token);
-   const noteValue = useAppSelector(state => state.root.dataSlice.note.value);
-   const [textValue, setTextValue] = useState<string>(noteValue ?? '');
-
-
+   const notes = useAppSelector(state => state.root.dataSlice.notes);
+   const loadingState = useAppSelector(loadingSelector);
+   const [textValue, setTextValue] = useState('');
 
    const handleLogout = () => {
       dispatch(logoutUser());
    };
 
    const handleSaveText = async () => {
-      dispatch(
-         setNote({
-            value: textValue,
-            user: userToken,
-            date: new Date(),
-         }),
-      );
+      if (authToken) {
+         dispatch(
+            addNote({
+               value: textValue,
+               user: authToken,
+               date: new Date(),
+            }),
+         );
 
-      ToastAndroid.showWithGravity('saved', ToastAndroid.SHORT, ToastAndroid.CENTER);
+         ToastAndroid.showWithGravity('saved', ToastAndroid.SHORT, ToastAndroid.CENTER);
+         setTextValue('');
+      } else {
+         throw new Error('No token found');
+      }
    };
 
    return (
@@ -36,8 +47,39 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
          style={{ flex: 1, alignItems: 'center', justifyContent: 'center', rowGap: 48 }}
       >
          <View>
-            <Text style={{ fontSize: 16 }}>Current auth status: {authStatus}</Text>
+            <Text style={{ fontSize: 16 }}>Current auth status: {authStatus.state}</Text>
             <Text style={{ fontSize: 16 }}>Token in store: {authToken}</Text>
+         </View>
+
+         <View style={{ rowGap: 16 }}>
+            {loadingState ?
+               <ActivityIndicator /> :
+               notes.map((note, index) => (
+                  <View
+                     key={index}
+                     style={{
+                        rowGap: 8,
+                        backgroundColor: '#99335510',
+                        padding: 6,
+                        borderRadius: 4,
+                     }}
+                  >
+                     <View style={{ flexDirection: 'row', columnGap: 16 }}>
+                        <Text>{note.user}</Text>
+                        <Text>{note.date.toISOString()}</Text>
+                     </View>
+
+                     <Text>{note.value}</Text>
+
+                     <TouchableOpacity
+                        onPress={() => {
+                           dispatch(removeNote(note.value));
+                        }}
+                     >
+                        <Text style={{ color: 'violet' }}>Remove note</Text>
+                     </TouchableOpacity>
+                  </View>
+               ))}
          </View>
 
          <View style={{ rowGap: 16 }}>
@@ -59,7 +101,6 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
                onPress={() => navigation.navigate('Notifications')}
                title="Go to notifications"
             />
-
             <Button onPress={handleLogout} title="Log out" />
          </View>
       </View>
