@@ -21,6 +21,8 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
    const loadingState = useAppSelector(loadingSelector);
    const [textValue, setTextValue] = useState('');
 
+   console.log(notes);
+
    const handleLogout = () => {
       dispatch(logoutUser());
    };
@@ -31,7 +33,7 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
             addNote({
                value: textValue,
                user: authToken,
-               date: new Date(),
+               date: new Date().toISOString(),
             }),
          );
 
@@ -66,7 +68,7 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
                   >
                      <View style={{ flexDirection: 'row', columnGap: 16 }}>
                         <Text>{note.user}</Text>
-                        <Text>{note.date.toISOString()}</Text>
+                        <Text>{note.date}</Text>
                      </View>
 
                      <Text>{note.value}</Text>
