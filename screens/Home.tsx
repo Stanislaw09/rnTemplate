@@ -12,13 +12,8 @@ import {
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getAuthToken, logoutUser } from '../store/authSlice';
-import {
-   fetchMusic,
-   loadingSelector,
-   musicSelector,
-   addTrack,
-   removeTrack,
-} from '../store/dataSlice';
+import { fetchMusic, loadingSelector, musicSelector, addTrack } from '../store/dataSlice';
+import ListItem from '../components/ListItem';
 
 function HomeScreen({ navigation }: DrawerScreenProps<any>) {
    const dispatch = useAppDispatch();
@@ -71,31 +66,7 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
             {loadingState ? (
                <ActivityIndicator />
             ) : (
-               tracks.map((track, index) => (
-                  <View
-                     key={index}
-                     style={{
-                        rowGap: 8,
-                        backgroundColor: '#99335510',
-                        padding: 6,
-                        borderRadius: 4,
-                        marginVertical: 10,
-                     }}
-                  >
-                     <View style={{ flexDirection: 'row', columnGap: 16 }}>
-                        <Text>{track.author}</Text>
-                        <Text>{track.title}</Text>
-                     </View>
-
-                     <TouchableOpacity
-                        onPress={() => {
-                           dispatch(removeTrack(track.id));
-                        }}
-                     >
-                        <Text style={{ color: 'violet' }}>Remove note</Text>
-                     </TouchableOpacity>
-                  </View>
-               ))
+               tracks.map((track, index) => <ListItem index={index} track={track} />)
             )}
          </ScrollView>
 
@@ -110,7 +81,20 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
                   padding: 10,
                }}
             />
-            <Button onPress={handleSaveText} title="Save to store" />
+            <TouchableOpacity
+               style={{
+                  backgroundColor: 'purple',
+                  height: 42,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  borderRadius: 8,
+                  elevation: 2,
+               }}
+               onPress={handleSaveText}
+            >
+               <Text style={{ color: '#eee', fontSize: 20 }}>Save to store</Text>
+            </TouchableOpacity>
          </View>
 
          <View style={{ columnGap: 24, marginBottom: 24, flexDirection: 'row' }}>
