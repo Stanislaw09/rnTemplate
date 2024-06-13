@@ -22,7 +22,7 @@ function LoginScreen({ navigation }: NativeStackScreenProps<any>) {
                flexDirection: 'row',
                columnGap: 12,
                alignItems: 'center',
-               marginBottom: 20
+               marginBottom: 20,
             }}
          >
             <Text style={{ fontSize: 24 }}>Login Screen</Text>
