@@ -8,6 +8,8 @@ export interface Track {
    id: number;
    title: string;
    author: string;
+   image: string | null;
+   link: string | null;
 }
 
 export interface Music {
