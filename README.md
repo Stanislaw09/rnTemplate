@@ -3,6 +3,8 @@ React-Native app template which utilizes Stack & Drawer navigation.
 Allows to save data to the redux store and keep them in async storage with Redux-Persist.
 Implements some simple animations with the usage of LayoutAnimation
 
+_This is a sample app for easier setup of future projects_
+
 ## Troubleshooting
 
 In case of issues with Watchman (probably macOS), you can try
