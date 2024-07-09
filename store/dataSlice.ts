@@ -44,7 +44,7 @@ export const removeTrack = createAsyncThunk(
 
 export const fetchMusic = createAsyncThunk('data/fetchMusic', thunkAPI => {
    return axios
-      .get<Music>('https://my-json-server.typicode.com/stanislaw09/demo/db')
+      .get<Music>(`${process.env.API_URL}`)
       .then(resp => {
          return resp.data.tracks;
       })
