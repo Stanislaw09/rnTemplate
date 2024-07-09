@@ -14,19 +14,21 @@ import {
 import { useAppDispatch } from '../store/hooks';
 import { removeTrack } from '../store/dataSlice';
 import { Track } from '../types/user';
+import { useNavigation } from '@react-navigation/native';
+import { HomeNavigationProp } from '../Navigator';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
    UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
 interface Props {
-   index: number;
    track: Track;
 }
 
-export default function ListItem({ index, track }: Props) {
+export default function ListItem({ track }: Props) {
    const dispatch = useAppDispatch();
    const [expanded, setExpanded] = useState(false);
+   const navigation = useNavigation<HomeNavigationProp>();
 
    const handleOpenLink = useCallback(async () => {
       if (!track.link) return;
@@ -37,19 +39,27 @@ export default function ListItem({ index, track }: Props) {
       else Alert.alert(`Don't know how to open this URL: ${track.link}`);
    }, [track.link]);
 
+   const navigateToDetails = () => {
+      navigation.navigate('Details', track);
+   };
+
    return (
-      <View key={index} style={styles.container}>
+      <View style={styles.container}>
          <View style={{ height: expanded ? 84 : 48, rowGap: 8 }}>
             <View style={styles.overview}>
                {track.image ? (
-                  <Image source={{ uri: track.image }} style={styles.img} />
+                  <TouchableOpacity onPress={navigateToDetails}>
+                     <Image source={{ uri: track.image }} style={styles.img} />
+                  </TouchableOpacity>
                ) : undefined}
 
                <View style={styles.trackInfo}>
-                  <View style={styles.header}>
-                     <Text>{track.author}</Text>
-                     <Text>{track.title}</Text>
-                  </View>
+                  <TouchableOpacity onPress={navigateToDetails}>
+                     <View style={styles.header}>
+                        <Text>{track.author}</Text>
+                        <Text>{track.title}</Text>
+                     </View>
+                  </TouchableOpacity>
 
                   <View style={styles.buttons}>
                      <TouchableOpacity
@@ -63,7 +73,7 @@ export default function ListItem({ index, track }: Props) {
                            setExpanded(!expanded);
                         }}
                      >
-                        <Text>More</Text>
+                        {expanded ? <Text>Less</Text> : <Text>More</Text>}
                      </TouchableOpacity>
 
                      <TouchableOpacity
@@ -81,9 +91,7 @@ export default function ListItem({ index, track }: Props) {
             <View>
                {track.link ? (
                   <TouchableOpacity onPress={handleOpenLink}>
-                     <Text>
-                        {track.link}
-                     </Text>
+                     <Text>{track.link}</Text>
                   </TouchableOpacity>
                ) : (
                   <Text>No link provided :/</Text>

@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { DrawerScreenProps } from '@react-navigation/drawer';
-import { View, Text, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getAuthToken } from '../store/authSlice';
 import { fetchMusic, loadingSelector, musicSelector } from '../store/dataSlice';
 import ListItem from '../components/ListItem';
 import NewItem from '../components/NewItem';
+import { FlatList } from 'react-native-gesture-handler';
 
 function HomeScreen({ navigation }: DrawerScreenProps<any>) {
    const dispatch = useAppDispatch();
@@ -18,22 +19,34 @@ function HomeScreen({ navigation }: DrawerScreenProps<any>) {
    }, []);
 
    return (
-      <View
-         style={{ flex: 1, alignItems: 'center', justifyContent: 'center', rowGap: 24, paddingVertical: 16 }}
-      >
-         <Text style={{ fontSize: 20 }}>Welcome {authToken}</Text>
+      <View style={styles.container}>
+         <Text style={styles.text}>Welcome {authToken}</Text>
 
-         <ScrollView style={{ marginVertical: 12 }}>
-            {loadingState ? (
-               <ActivityIndicator />
-            ) : (
-               tracks.map((track, index) => <ListItem index={index} track={track} />)
-            )}
-         </ScrollView>
-
+         {loadingState ? (
+            <ActivityIndicator />
+         ) : (
+            <FlatList
+               data={tracks}
+               keyExtractor={track => `${track.id}`}
+               renderItem={({ item }) => <ListItem track={item} />}
+            />
+         )}
          <NewItem />
       </View>
    );
 }
+
+const styles = StyleSheet.create({
+   container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      rowGap: 24,
+      paddingVertical: 16,
+   },
+   text: {
+      fontSize: 20,
+   },
+});
 
 export default HomeScreen;
